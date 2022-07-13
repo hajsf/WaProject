@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"fmt"
 )
 
 var err error
 
 func Connect() {
-	fmt.Println("Connected")
+	// fmt.Println("Connected")
 	if client.IsConnected() {
 		client.Disconnect()
 		passer.data <- sseData{
@@ -79,14 +78,4 @@ func Connect() {
 			panic(err)
 		}
 	}
-	/*
-		c := make(chan os.Signal, 1)
-		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-
-		<-c
-		passer.data <- sseData{
-			event:   "notification",
-			message: "Server got shut down",
-		}
-	*/
 }

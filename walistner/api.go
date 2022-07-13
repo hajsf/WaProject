@@ -27,7 +27,7 @@ func (p *DataPasser) HandleSignal(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Client connected from IP:", r.RemoteAddr)
-	fmt.Println(len(p.connection), "new connection recieved")
+	// fmt.Println(len(p.connection), "new connection recieved")
 	if len(p.connection) > 0 {
 		fmt.Fprint(w, "event: notification\ndata: Connection is opened in another browser/tap ...\n\n")
 		flusher.Flush()
@@ -65,7 +65,7 @@ func (p *DataPasser) HandleSignal(w http.ResponseWriter, r *http.Request) {
 			flusher.Flush()
 		case <-r.Context().Done():
 			<-p.connection
-			fmt.Println("Connection closed")
+			fmt.Println("Connection closed from IP:", r.RemoteAddr)
 			return
 		}
 	}

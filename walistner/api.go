@@ -20,14 +20,30 @@ func (p *DataPasser) HandleSignal(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "keep-alive")
 	setupCORS(&w, r)
 
-	fmt.Println("Client connected from IP:", r.RemoteAddr)
-
-	p.connection <- struct{}{}
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Internal error", 500)
 		return
 	}
+
+	fmt.Println("Client connected from IP:", r.RemoteAddr)
+	fmt.Println(len(p.connection), "new connection recieved")
+	if len(p.connection) > 0 {
+		fmt.Fprint(w, "event: notification\ndata: Connection is opened in another browser/tap ...\n\n")
+		flusher.Flush()
+		/*	w.WriteHeader(http.StatusNotFound)
+			w.Header().Set("Content-Type", "application/json")
+			resp := make(map[string]string)
+			resp["message"] = "Resource Not Found"
+			jsonResp, err := json.Marshal(resp)
+			if err != nil {
+				log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+			}
+			w.Write(jsonResp)
+			return
+		*/
+	}
+	p.connection <- struct{}{}
 
 	fmt.Fprint(w, "event: notification\ndata: Connection to WhatsApp server ...\n\n")
 	flusher.Flush()
@@ -38,7 +54,7 @@ func (p *DataPasser) HandleSignal(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case data := <-p.data:
-			fmt.Println("recieved")
+			// fmt.Println("SSE data recieved")
 
 			switch {
 			case len(data.event) > 0:

@@ -29,7 +29,7 @@ func Connect() {
 				event:   "notification",
 				message: "Can not connect with WhatApp server, try again later",
 			}
-			fmt.Println("Sorry", err)
+			// fmt.Println("Sorry", err)
 
 		}
 
@@ -42,7 +42,7 @@ func Connect() {
 						event:   "notification",
 						message: "success",
 					}
-					fmt.Println("Login event: success")
+					// fmt.Println("Login event: success")
 				}
 			case "timeout":
 				{
@@ -51,13 +51,13 @@ func Connect() {
 						event:   "notification",
 						message: "timeout/Refreshing",
 					}
-					fmt.Println("Login event: timeout")
+					// fmt.Println("Login event: timeout")
 					goto GetQR
 				}
 			case "code":
 				{
-					fmt.Println("new code recieved")
-					fmt.Println(evt.Code)
+					//fmt.Println("new code recieved")
+					//fmt.Println(evt.Code)
 					//passer.logs <- evt.Code
 					passer.data <- sseData{
 						event:   "qrCode",
@@ -73,7 +73,7 @@ func Connect() {
 			event:   "notification",
 			message: "Already logged in",
 		}
-		fmt.Println("Already logged")
+		//fmt.Println("Already logged")
 		err = client.Connect()
 		if err != nil {
 			panic(err)

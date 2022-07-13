@@ -29,23 +29,28 @@ func init() {
 }
 
 func init() {
-	store.DeviceProps.Os = proto.String("Cocoon App")
-	dbLog := waLog.Stdout("Database", "ERROR", true) // "DEBUG"
-	// Make sure you add appropriate DB connector imports, e.g. github.com/mattn/go-sqlite3 for SQLite
-	container, err := sqlstore.New("sqlite3", "file:datastore.db?_foreign_keys=on", dbLog)
-	if err != nil {
-		panic(err)
-	}
-	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
-	deviceStore, err := container.GetFirstDevice()
-	if err != nil {
-		panic(err)
-	}
+	go func() {
+		store.DeviceProps.Os = proto.String("Cocoon App")
+		dbLog := waLog.Stdout("Database", "ERROR", true) // "DEBUG"
+		// Make sure you add appropriate DB connector imports, e.g. github.com/mattn/go-sqlite3 for SQLite
+		container, err := sqlstore.New("sqlite3", "file:datastore.db?_foreign_keys=on", dbLog)
+		if err != nil {
+			panic(err)
+		}
+		// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
+		deviceStore, err := container.GetFirstDevice()
+		if err != nil {
+			panic(err)
+		}
 
-	clientLog := waLog.Stdout("Client", "ERROR", true)
-	// clientLog := waLog.Stdout("Client", "DEBUG", true)
-	client = whatsmeow.NewClient(deviceStore, clientLog)
-	client.AddEventHandler(eventHandler)
+		//clientLog := waLog.Stdout("Client", "ERROR", true)
+		//client = whatsmeow.NewClient(deviceStore, clientLog)
+		clientLog := LogText("Client", "DEBUG", true)
+		client = whatsmeow.NewClient(deviceStore, clientLog)
+
+		client.AddEventHandler(eventHandler)
+	}()
+
 	/* Trying to catch the error:
 	cmd := exec.Command("tail", "-f",  "/usr/local/var/log/redis.log"
 
@@ -69,7 +74,7 @@ func init() {
 func main() {
 
 	http.HandleFunc("/sse", passer.HandleSignal)
-	go http.ListenAndServe(":1234", nil)
+	go http.ListenAndServe(":4004", nil)
 
 	// Listen to Ctrl+C (you can also do something else that prevents the program from exiting)
 	c := make(chan os.Signal, 1)

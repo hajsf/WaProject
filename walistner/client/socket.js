@@ -1,4 +1,4 @@
-let sseUri = "http://localhost:1234/sse"
+let sseUri = "http://localhost:4004/sse"
 let source = new EventSource(sseUri);
 let reconnecting = false;
 let live = document.querySelector('.badge')
@@ -16,7 +16,7 @@ source.onerror = function() {
     if (source.readyState == EventSource.CLOSED) {
         live.style.backgroundColor = '#30000614';
         source.close();
-        source = new EventSource("http://localhost:1234/sse");
+        source = new EventSource("http://localhost:4004/sse");
     } 
 }, 3000);
 }

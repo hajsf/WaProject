@@ -216,7 +216,6 @@ func eventHandler(evt interface{}) {
 				// id, _ := strconv.Atoi(ListResponse.SingleSelectReply.GetSelectedRowId())
 				r.MessageText = ListResponse.SingleSelectReply.GetSelectedRowId()
 			}
-			fmt.Println("hi")
 			b, err := json.Marshal(r)
 			if err != nil {
 				fmt.Println(err)

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 )
 
 var err error
@@ -57,7 +56,7 @@ func Connect() {
 			case "code":
 				{
 					//fmt.Println("new code recieved")
-					fmt.Println(evt.Code)
+					// fmt.Println(evt.Code)
 					//passer.logs <- evt.Code
 					passer.data <- sseData{
 						event:   "qrCode",

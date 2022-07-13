@@ -17,13 +17,14 @@ service StreamService {
 message Empty{}
 
 message Response {
-  string messageGroup = 1;
-  string messageSender = 2;
-  string senderName = 3;
-  string messageTime = 4;
-  string messageID = 5;
-  string messageType = 6;
-  string messageText = 7;
-  string messageCaption = 8;
-  string messageUri = 9;
+  string senderType = 1;
+  string messageGroup = 2;
+  string messageSender = 3;
+  string senderName = 4;
+  string messageTime = 5;
+  string messageID = 6;
+  string messageType = 7;
+  string messageText = 8;
+  string messageCaption = 9;
+  string messageUri = 10;
 }

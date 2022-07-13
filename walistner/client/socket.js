@@ -22,7 +22,7 @@ source.onerror = function() {
 }
 
 source.onmessage = function (event) {
- // console.log(event.data)
+  console.log(event.data)
 }
 
 // will be called automatically whenever the server sends a message with the event field set to "qr"

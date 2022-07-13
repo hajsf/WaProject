@@ -14,8 +14,8 @@ import (
 )
 
 type Response struct {
-	senderType, messageGroup, messageSender, senderName, messageTime string
-	messageID, messageType, messageText, messageCaption, messageUri  string
+	SenderType, MessageGroup, MessageSender, SenderName, MessageTime string
+	MessageID, MessageType, MessageText, MessageCaption, MessageUri  string
 }
 
 func eventHandler(evt interface{}) {
@@ -26,59 +26,59 @@ func eventHandler(evt interface{}) {
 			sender := v.Info.Chat.User
 
 			r := Response{
-				senderType:     "",
-				messageGroup:   strconv.FormatBool(v.Info.IsGroup),
-				messageSender:  "",
-				senderName:     v.Info.PushName,
-				messageTime:    v.Info.Timestamp.String(),
-				messageID:      v.Info.ID,
-				messageType:    "",
-				messageText:    "",
-				messageCaption: "",
-				messageUri:     "",
+				SenderType:     "",
+				MessageGroup:   strconv.FormatBool(v.Info.IsGroup),
+				MessageSender:  "",
+				SenderName:     v.Info.PushName,
+				MessageTime:    v.Info.Timestamp.String(),
+				MessageID:      v.Info.ID,
+				MessageType:    "",
+				MessageText:    "",
+				MessageCaption: "",
+				MessageUri:     "",
 			}
 
 			switch sender {
 			case "status":
-				r.senderType = "status"
-				r.messageSender = v.Info.PushName
+				r.SenderType = "status"
+				r.MessageSender = v.Info.PushName
 			default:
-				r.senderType = "message"
-				r.messageSender = sender
+				r.SenderType = "message"
+				r.MessageSender = sender
 			}
 			//fmt.Println("Received a message!", v.Message.GetConversation())
 			switch {
 			// Conversation: Text
 			case v.Message.Conversation != nil:
-				r.messageType = "Text"
-				r.messageText = v.Message.GetConversation()
+				r.MessageType = "Text"
+				r.MessageText = v.Message.GetConversation()
 
 			// Conversation: Text
 			case v.Message.ExtendedTextMessage != nil:
-				r.messageType = "Text"
+				r.MessageType = "Text"
 				info, err := json.MarshalIndent(v.Message.ExtendedTextMessage.GetText(), "", "\t")
 				if err != nil {
 					fmt.Println(err)
 				}
-				r.messageText = string(info)
+				r.MessageText = string(info)
 
 			// Conversation: Text
 			case v.Message.DeviceSentMessage != nil:
-				r.messageType = "Text"
-				r.messageText = v.RawMessage.String()
+				r.MessageType = "Text"
+				r.MessageText = v.RawMessage.String()
 
 			// Conversation: Text
 			case v.Message.Chat != nil:
-				r.messageType = "Text"
+				r.MessageType = "Text"
 				msgReceived := v.Message.GetChat()
-				r.messageText = fmt.Sprintf("%v", msgReceived)
+				r.MessageText = fmt.Sprintf("%v", msgReceived)
 
 			// Conversation: Image
 			case v.Message.ImageMessage != nil:
-				r.messageType = "Image"
+				r.MessageType = "Image"
 				img := v.Message.GetImageMessage()
 				if v.Message.ImageMessage.Caption != nil {
-					r.messageCaption = *v.Message.ImageMessage.Caption
+					r.MessageCaption = *v.Message.ImageMessage.Caption
 				}
 
 				if img != nil {
@@ -95,12 +95,12 @@ func eventHandler(evt interface{}) {
 						return
 					}
 					log.Printf("Saved image in message to %s", path)
-					r.messageUri = path
+					r.MessageUri = path
 				}
 
 			// Conversation: Sticker
 			case v.Message.StickerMessage != nil:
-				r.messageType = "Sticker"
+				r.MessageType = "Sticker"
 				sticker := v.Message.GetStickerMessage()
 				if sticker.Url != nil {
 					fmt.Println(sticker)
@@ -114,7 +114,7 @@ func eventHandler(evt interface{}) {
 
 			// Conversation: Audio
 			case v.Message.AudioMessage != nil:
-				r.messageType = "Audio"
+				r.MessageType = "Audio"
 				audio := v.Message.GetAudioMessage()
 				if audio != nil {
 					file, err := client.Download(audio)
@@ -130,15 +130,15 @@ func eventHandler(evt interface{}) {
 						return
 					}
 					log.Printf("Saved audio in message to %s", path)
-					r.messageUri = path
+					r.MessageUri = path
 				}
 
 			// Conversation: Video
 			case v.Message.VideoMessage != nil:
-				r.messageType = "Video"
+				r.MessageType = "Video"
 				video := v.Message.GetVideoMessage()
 				if v.Message.VideoMessage.Caption != nil {
-					r.messageCaption = *v.Message.VideoMessage.Caption
+					r.MessageCaption = *v.Message.VideoMessage.Caption
 				}
 
 				if video != nil {
@@ -155,12 +155,12 @@ func eventHandler(evt interface{}) {
 						return
 					}
 					log.Printf("Saved video in message to %s", path)
-					r.messageUri = path
+					r.MessageUri = path
 				}
 
 			// Conversation: Document
 			case v.Message.DocumentMessage != nil:
-				r.messageType = "Document"
+				r.MessageType = "Document"
 				document := v.Message.GetDocumentMessage()
 				if document != nil {
 					file, err := client.Download(document)
@@ -176,19 +176,19 @@ func eventHandler(evt interface{}) {
 						return
 					}
 					log.Printf("Saved document in message to %s", path)
-					r.messageUri = path
+					r.MessageUri = path
 				}
 
 			// Conversation: Contact
 			case v.Message.ContactMessage != nil:
-				r.messageType = "Contact"
+				r.MessageType = "Contact"
 				Contact := v.Message.GetContactMessage()
 				//fmt.Println(Contact.GetDisplayName())
-				r.messageText = Contact.GetVcard()
+				r.MessageText = Contact.GetVcard()
 
 			// Conversation: Location
 			case v.Message.LocationMessage != nil:
-				r.messageType = "Location"
+				r.MessageType = "Location"
 				Location := v.Message.GetLocationMessage()
 				fmt.Println(Location.GetDegreesLatitude())
 				fmt.Println(Location.GetDegreesLongitude())
@@ -198,28 +198,35 @@ func eventHandler(evt interface{}) {
 				longitud := Location.GetDegreesLongitude()
 				//	address := Location.GetAddress()
 				link := fmt.Sprintf("<a href='https://www.google.com/maps/@%f,%f,15z' target='_blank'>Open map</a>", latitude, longitud)
-				r.messageText = "Location: " + link
+				r.MessageText = "Location: " + link
 
 			// Conversation: Buttons Response
 			case v.Message.ButtonsResponseMessage != nil:
-				r.messageType = "ButtonsResponse"
+				r.MessageType = "ButtonsResponse"
 				//	fmt.Println("Button responce pressed")
 				ButtonResponse := v.Message.GetButtonsResponseMessage()
 				// id, _ := strconv.Atoi(ButtonResponse.GetSelectedButtonId())
-				r.messageText = ButtonResponse.GetSelectedButtonId() // string(id)
+				r.MessageText = ButtonResponse.GetSelectedButtonId() // string(id)
 
 			// Conversation: List Response
 			case v.Message.ListResponseMessage != nil:
-				r.messageType = "ListResponse"
+				r.MessageType = "ListResponse"
 				// fmt.Println("List responce pressed")
 				ListResponse := v.Message.GetListResponseMessage()
 				// id, _ := strconv.Atoi(ListResponse.SingleSelectReply.GetSelectedRowId())
-				r.messageText = ListResponse.SingleSelectReply.GetSelectedRowId()
+				r.MessageText = ListResponse.SingleSelectReply.GetSelectedRowId()
 			}
-		}
-		passer.data <- sseData{
-			event:   "message", // also it can be empty to be managed by source.onmessage
-			message: "Reconnecting to WhatsApp server ...",
+			fmt.Println("hi")
+			b, err := json.Marshal(r)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Println(string(b))
+			passer.data <- sseData{
+				event:   "message", // also it can be empty to be managed by source.onmessage
+				message: string(b),
+			}
 		}
 	}()
 }

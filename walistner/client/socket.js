@@ -37,6 +37,7 @@ source.addEventListener("notification", function(event) {
 });
 
 source.addEventListener("qrCode", function(event) {
+  var message = event.data
   console.log(event.data)
   document.querySelector('#qr').innerHTML = "";
   document.querySelector('#message').innerHTML = "Scan the QR code from the WhatsApp application";

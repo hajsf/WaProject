@@ -45,7 +45,7 @@ func (p *DataPasser) HandleSignal(w http.ResponseWriter, r *http.Request) {
 	}
 	p.connection <- struct{}{}
 
-	fmt.Fprint(w, "event: notification\ndata: Connection to WhatsApp server ...\n\n")
+	fmt.Fprint(w, "event: notification\ndata: Connecting to WhatsApp server ...\n\n")
 	flusher.Flush()
 
 	// Connect to the WhatsApp client

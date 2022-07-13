@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 )
 
 var err error
@@ -48,7 +49,7 @@ func Connect() {
 					//passer.logs <- "timeout/Refreshing"
 					passer.data <- sseData{
 						event:   "notification",
-						message: "timeout/Refreshing",
+						message: "Timeout or error reading from WhatsApp websocket, trying refreshing ...",
 					}
 					// fmt.Println("Login event: timeout")
 					goto GetQR
@@ -56,7 +57,7 @@ func Connect() {
 			case "code":
 				{
 					//fmt.Println("new code recieved")
-					//fmt.Println(evt.Code)
+					fmt.Println(evt.Code)
 					//passer.logs <- evt.Code
 					passer.data <- sseData{
 						event:   "qrCode",

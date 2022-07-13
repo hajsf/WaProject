@@ -9,6 +9,7 @@ source.onopen = function(){
 }
 
 source.onerror = function() {
+  document.querySelector('#qr').innerHTML = "";
   document.querySelector('#message').innerHTML = "Server is down at the host machine ";
   live.style.backgroundColor = '#30000614';
   setInterval(() => {
@@ -36,7 +37,7 @@ source.addEventListener("notification", function(event) {
 });
 
 source.addEventListener("qrCode", function(event) {
-//  console.log(event.data)
+  console.log(event.data)
   document.querySelector('#qr').innerHTML = "";
   document.querySelector('#message').innerHTML = "Scan the QR code from the WhatsApp application";
   var qrcode = new QRCode("qr", {

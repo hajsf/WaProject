@@ -55,6 +55,10 @@ func main() {
 
 	<-c
 	if client.IsConnected() {
+		passer.data <- sseData{
+			event:   "notification",
+			message: "Server is shut down at the host machine...",
+		}
 		client.Disconnect()
 	}
 }

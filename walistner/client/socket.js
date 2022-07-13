@@ -25,6 +25,7 @@ source.onopen = function(){
 }
 
 source.onerror = function() {
+  document.querySelector('#message').innerHTML = "Server is down at the host machine ";
   live.style.backgroundColor = '#30000614';
   setInterval(() => {
     if (source.readyState == EventSource.CLOSED) {

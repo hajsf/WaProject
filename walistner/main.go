@@ -22,7 +22,7 @@ const maxClients = 1
 
 func init() {
 	store.DeviceProps.Os = proto.String("Cocoon App")
-	dbLog := waLog.Stdout("Database", "DEBUG", true)
+	dbLog := waLog.Stdout("Database", "ERROR", true) // "DEBUG"
 	// Make sure you add appropriate DB connector imports, e.g. github.com/mattn/go-sqlite3 for SQLite
 	container, err := sqlstore.New("sqlite3", "file:datastore.db?_foreign_keys=on", dbLog)
 	if err != nil {
@@ -33,7 +33,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	clientLog := waLog.Stdout("Client", "DEBUG", true)
+	clientLog := waLog.Stdout("Client", "ERROR", true) // "DEBUG"
 	client = whatsmeow.NewClient(deviceStore, clientLog)
 	client.AddEventHandler(eventHandler)
 
